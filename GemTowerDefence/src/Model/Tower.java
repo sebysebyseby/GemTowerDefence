@@ -122,8 +122,9 @@ public abstract class Tower extends Sprite {
     * Creates a line to represent the tower's shot
     * Kills increases by 1 if the target is killed (alive before shooting, dead after shooting)
     * If the target killed was the game's "selected" set selected to null
+    * When firing, removes any status is previously applied to the same enemy //todo: reapply status
     * */
-    public void shot(boolean slow, int slowDuration, boolean poison, int damagePerTick, int poisonDuration, boolean splash, int splashRadius, boolean crit, int chance, int multiplier, int numTargets){
+    public void shot(boolean stun, int stunChance, int stunDuration, boolean slow, int slowPercent, int slowDuration, boolean poison, int damagePerTick, int poisonDuration, boolean splash, int splashRadius, boolean crit, int chance, int multiplier, int numTargets){
         java.util.List<Enemy> enemies = game.getSortedEnemiesInRangeOf(this);
         for (int i = 0; i<enemies.size() && i<numTargets; i++){ //repeat the shot cycle numTarget times
             setTarget(enemies.get(i));
@@ -135,10 +136,12 @@ public abstract class Tower extends Sprite {
             target.setCurrentHP(target.getCurrentHP() - damage);
             boolean aliveAfterShooting = target.getCurrentHP() > 0;
             if (aliveBeforeShooting && !aliveAfterShooting) {
-                kills += 1;
+                kills += 1; // award a kill to the tower that dealt the killing damage
                 if (game.getSelected() == target) game.setSelected(null); //deselect a dead target
             }
-            if (splash){
+            applyStatus(stun, stunChance, stunDuration, slow, slowPercent, slowDuration, poison, damagePerTick, poisonDuration, target);
+
+            if (splash){ //Splash
                 LinkedList<Enemy> splashTargets = new LinkedList<>();
                 double dx;
                 double dy;
@@ -158,29 +161,56 @@ public abstract class Tower extends Sprite {
                         kills += 1; // award a kill to the tower that dealt the killing damage
                         if (game.getSelected() == target) game.setSelected(null); //deselect a dead target
                     }
+                    applyStatus(stun, stunChance, stunDuration, slow, slowPercent, slowDuration, poison, damagePerTick, poisonDuration, e);
                 }
             }
 
         }
     }
 
+
+    // Apply the statuses as given. If a status has already been applied to an enemy, remove that status and replace it with a "refreshed" status
+    public void applyStatus(boolean stun, int stunChance, int stunDuration,
+                            boolean slow, int slowPercent, int slowDuration,
+                            boolean poison, int damagePerSec, int poisonDuration, Enemy target){
+        boolean willItStun = (Math.floor(Math.random())*100 <= stunChance-1); //Stun Chance
+        Iterator<Status> si = target.getStatuses().iterator();
+        while (si.hasNext()){
+            if (si.next().getInflictedBy() == this){
+                si.remove();
+            }
+        }
+        if (stun && willItStun){
+            target.getStatuses().add(new Status("Stun", stunDuration, 0, 0, this, target));
+        }
+        if (slow){
+            target.getStatuses().add(new Status("Slow", slowDuration, 0, slowPercent, this, target));
+        }
+        if (poison){
+            target.getStatuses().add(new Status("Poison", poisonDuration, damagePerSec, 0, this, target));
+        }
+    }
+
     public void defaultShot(){
-        shot(false, 0, false, 0, 0, false, 0, false, 0, 0, 1);
+        shot(false, 0, 0, false, 0, 0, false, 0, 0, false, 0, false, 0, 0, 1);
     }
     public void multiShot(int numTargets){
-        shot(false, 0, false, 0, 0, false, 0, false, 0, 0, numTargets);
+        shot(false, 0, 0, false, 0, 0, false, 0, 0, false, 0, false, 0, 0, numTargets);
     }
     public void poisonShot(int damagePerTick, int duration){
-        shot(false, 0, true, damagePerTick, duration, false, 0, false, 0, 0, 1);
+        shot(false, 0, 0, false, 0, 0, true, damagePerTick, duration, false, 0, false, 0, 0, 1);
     }
-    public void slowShot(int duration){
-        shot(true, duration, false, 0, 0, false, 0, false, 0, 0, 1);
+    public void slowShot(int slowPercent, int duration){
+        shot(false, 0, 0, true, slowPercent, duration, false, 0, 0, false, 0, false, 0, 0, 1);
     }
     public void criticalShot(int chance, int multiplier){
-        shot(false, 0, false, 0, 0, false, 0, true, chance, multiplier, 1);
+        shot(false, 0, 0, false, 0, 0, false, 0, 0, false, 0, true, chance, multiplier, 1);
     }
     public void splashShot(int splash){
-        shot(false, 0, false, 0, 0, true, splash, false, 0, 0, 1);
+        shot(false, 0, 0, false, 0, 0, false, 0, 0, true, splash, false, 0, 0, 1);
+    }
+    public void stunShot(int chance, int duration){
+        shot(true, chance, duration, false, 0, 0, false, 0, 0, false, 0, false, 0, 0, 1);
     }
 
     public abstract void fireTower();

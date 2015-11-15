@@ -102,6 +102,7 @@ public class Constants {
         }
     }
 
+    static int movesPerFrame = 60;
     public static int getMaxSpeed(Game game){
         int level = game.getLevel();
         switch (game.getDifficulty()){

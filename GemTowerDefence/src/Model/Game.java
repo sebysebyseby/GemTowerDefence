@@ -287,11 +287,13 @@ public class Game {
         return sortedEnemiesInRange;
     }
 
+    int moves = Constants.movesPerFrame;
     public void updateGame(){
         makeEnemy();
         updateTowerTargets();
         fireTowers();
-        for (int i=0; i<5; i++){
+        tickStatuses();
+        for (int i=0; i<moves; i++){ // enemies attempt to move 60*move times per second
             moveEnemies();
         }
         updateCooldowns();
@@ -334,6 +336,12 @@ public class Game {
                 tower.fireTower();
                 tower.setCurrentCooldown(tower.maxCooldown);
             }
+        }
+    }
+
+    public void tickStatuses(){
+        for (Enemy e: enemies){
+            e.tickStatuses();
         }
     }
 

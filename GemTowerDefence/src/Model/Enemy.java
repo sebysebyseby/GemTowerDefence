@@ -4,6 +4,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class Enemy extends Sprite{
     private int livesCost;
     private int xPos;
     private int yPos;
-    private List<String> statuses;
+    private List<Status> statuses;
     private int currentSpeed;
     private int maxSpeed;
     private int pause;
@@ -73,39 +74,67 @@ public class Enemy extends Sprite{
     public int getxPos() {
         return xPos;
     }
+    public List<Status> getStatuses(){ return statuses; }
     public int getMaxHp(){
         return Constants.getEnemyMaxHP(game.getDifficulty(), game.getLevel());
     }
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+    public void setCurrentSpeed(int currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
 
-    public void moveEnemy(){
-        if (xPos == (int) checkpointList[destinationCheckpoint].getX() &&
-                yPos == (int) checkpointList[destinationCheckpoint].getY()) {
-            if (checkpointList[destinationCheckpoint + 1] == null) direction = 'R';
-            else {
-                destinationCheckpoint += 1;
-                int destinationX = (int) checkpointList[destinationCheckpoint].getX();
-                int destinationY = (int) checkpointList[destinationCheckpoint].getY();
-                if (xPos < destinationX) direction = 'R';
-                if (xPos > destinationX) direction = 'L';
-                if (yPos > destinationY) direction = 'U';
-                if (yPos < destinationY) direction = 'D';
+
+    public void tickStatuses(){
+        Iterator<Status> si = statuses.iterator();
+        while (si.hasNext()){
+            Status s = si.next();
+            if (s.getDurationLeft() <= 0){
+                si.remove();
+            } else {
+                s.tickStatus();
             }
         }
-        // updates the enemy's x and y coordinates
-        switch (direction) {
-            case 'U':
-                yPos -= 1;
-                break;
-            case 'D':
-                yPos += 1;
-                break;
-            case 'L':
-                xPos -= 1;
-                break;
-            case 'R':
-                xPos += 1;
-                break;
+    }
+
+    // move the enemy based on its current speed
+    public void moveEnemy(){
+        if (pause <= 0) {
+            if (xPos == (int) checkpointList[destinationCheckpoint].getX() &&
+                    yPos == (int) checkpointList[destinationCheckpoint].getY()) {
+                if (checkpointList[destinationCheckpoint + 1] == null) direction = 'R';
+                else {
+                    destinationCheckpoint += 1;
+                    int destinationX = (int) checkpointList[destinationCheckpoint].getX();
+                    int destinationY = (int) checkpointList[destinationCheckpoint].getY();
+                    if (xPos < destinationX) direction = 'R';
+                    if (xPos > destinationX) direction = 'L';
+                    if (yPos > destinationY) direction = 'U';
+                    if (yPos < destinationY) direction = 'D';
+                }
+            }
+            // updates the enemy's x and y coordinates
+            switch (direction) {
+                case 'U':
+                    yPos -= 1;
+                    break;
+                case 'D':
+                    yPos += 1;
+                    break;
+                case 'L':
+                    xPos -= 1;
+                    break;
+                case 'R':
+                    xPos += 1;
+                    break;
+            }
+            pause = currentSpeed;
         }
+        pause--;
     }
 
     /*

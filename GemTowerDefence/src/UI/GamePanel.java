@@ -66,7 +66,6 @@ public class GamePanel extends JPanel implements MouseListener {
         isGameOver = game.getIsGameOver();
     }
 
-    int miniTimer = 3;
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);

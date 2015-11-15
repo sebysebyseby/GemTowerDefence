@@ -46,7 +46,7 @@ public class Gem extends Tower{
                 break;
             case "Sapphire":
                 type = "Sapphire";
-                slowShot(10);
+                slowShot(25, 5);
                 break;
             case "Topaz":
                 multiShot(3);
