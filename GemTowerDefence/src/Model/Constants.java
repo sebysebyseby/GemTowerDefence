@@ -68,6 +68,20 @@ public class Constants {
     public final static Gem PAm  = new Gem("Amethyst"  , "Perfect"  , 999, 999,      8,      12,   800, 60); // Perfect  Amethyst
     public final static Gem GAm  = new Gem("Amethyst"  , "Great"    , 999, 999,      8,      12,   800, 60); // Great    Amethyst
 
+    public final static SpecialTower Silver = new SpecialTower("Silver", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower Gold = new SpecialTower("Gold", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower Malichite = new SpecialTower("Malichite", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower StarRuby = new SpecialTower("StarRuby", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower Jade = new SpecialTower("Jade", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower BlackOpal = new SpecialTower("Black Opal", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower YellowSapphire = new SpecialTower("Yellow Sapphire", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower Uranium = new SpecialTower("Uranium", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower DarkEmerald = new SpecialTower("Dark Emerald", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower PinkDiamond = new SpecialTower("Pink Diamond", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower Bloodstone = new SpecialTower("Bloodstone", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower ParibaTourmaline = new SpecialTower("Pariba Tourmaline", "Sapphire", 999, 999, 15, 30, 70, 60);
+    public final static SpecialTower RedCrystal = new SpecialTower("Red Crystal", "Sapphire", 999, 999, 15, 30, 70, 60);
+
     public final static List<Gem> allPossibleGems = new ArrayList<>(Arrays.asList(
             CE,  FE,  NE,  FlE,  PE,  GE,
             CR,  FR,  NR,  FlR,  PR,  GR,
@@ -78,6 +92,41 @@ public class Constants {
             CO,  FO,  NO,  FlO,  PO,  GO,
             CAm, FAm, NAm, FlAm, PAm, GAm)
     );
+
+    // Given a particlar gem, returns a list with the first tower being the special tower that it upgrades into,
+    // followed by the towers that are needed to upgrade into that sower.
+    public LinkedList<Tower> getUpgradeGems(Gem g){ //todo: add the towers that the given gem upgrades with
+        String name = g.getType() + " " + g.getGrade();
+        if (name.equals("Chipped Aquamarine") || name.equals("Chipped Sapphire") || name.equals("Chipped Emerald")){
+            return new LinkedList<>(Arrays.asList(Malichite, CE, CAq, CS));
+        }else if (name.equals("Chipped Sapphire") || name.equals("Chipped Diamond") || name.equals("Chipped Topaz")){
+            return new LinkedList<>(Arrays.asList(Silver, CS, CD, CT));
+        }else if (name.equals("Flawed Ruby") || name.equals("Chipped Amethyst") || name.equals("Chipped Ruby")){
+            return new LinkedList<>(Arrays.asList(StarRuby, FR, CAm, CR));
+        }else if (name.equals("Normal Emerald") || name.equals("Normal Opal") || name.equals("Flawed Sapphire")){
+            return new LinkedList<>(Arrays.asList(Jade, NE, NO, FS));
+        }else if (name.equals("Flawless Emerald") || name.equals("Normal Ruby") || name.equals("Flawed Amethyst")){
+            return new LinkedList<>(Arrays.asList(RedCrystal, FlE, NR, FAm));
+        }else if (name.equals("Perfect Topaz") || name.equals("Normal Sapphire") || name.equals("Flawed Opal")){
+            return new LinkedList<>(Arrays.asList(Uranium, PT, NS, FO));
+        }else if (name.equals("Perfect Emerald") || name.equals("Flawless Sapphire") || name.equals("Flawed Topaz")){
+            return new LinkedList<>(Arrays.asList(DarkEmerald, PE, FlS, FT));
+        }else if (name.equals("Perfect Amethyst") || name.equals("Flawless Amethyst") || name.equals("Flawed Diamond")){
+            return new LinkedList<>(Arrays.asList(Gold, PAm, FlAm, FD));
+        }else if (name.equals("Perfect Ruby") || name.equals("Flawless Aquamarine") || name.equals("Normal Amethyst")){
+            return new LinkedList<>(Arrays.asList(Bloodstone, PR, FlAq, NAm));
+        }else if (name.equals("Perfect Opal") || name.equals("Flawless Diamond") || name.equals("Normal Aquamarine")){
+            return new LinkedList<>(Arrays.asList(BlackOpal, PO, FlD, NAq));
+        }else if (name.equals("Perfect Diamond") || name.equals("Normal Topaz") || name.equals("Normal Diamond")){
+            return new LinkedList<>(Arrays.asList(PinkDiamond, CS, CD, CT));
+        }else if (name.equals("Perfect Sapphire") || name.equals("Flawless Topaz") || name.equals("Flawless Ruby")){
+            return new LinkedList<>(Arrays.asList(YellowSapphire, PS, FlT, FlR));
+        }else if (name.equals("Perfect Aquamaring") || name.equals("Flawless Opal") || name.equals("Normal Emerald") || name.equals("Normal Aquamarine")){
+            return new LinkedList<>(Arrays.asList(ParibaTourmaline, PAq, FlO, FE, FAq));
+        }
+
+        return null;
+    }
 
     public static int getEnemyMaxHP(int difficulty, int level){
         switch (difficulty){

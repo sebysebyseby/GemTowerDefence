@@ -7,8 +7,9 @@ public class SpecialTower extends Tower {
 
     private String name;
 
-    public SpecialTower(String type, double range, int maxCooldown, int highDamage, int xPos, int yPos, int lowDamage) {
+    public SpecialTower(String name, String type, int xPos, int yPos,  int lowDamage, int highDamage, double range, int maxCooldown) {
         super(type, range, maxCooldown, highDamage, xPos, yPos, lowDamage);
+        this.name = name;
     }
 
     @Override

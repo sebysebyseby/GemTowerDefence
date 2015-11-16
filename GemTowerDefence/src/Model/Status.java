@@ -44,8 +44,8 @@ public class Status {
                 break;
             case "slow":
                 int maxSpeed = inflictedTo.getMaxSpeed();
-                int newSpeed = maxSpeed*slowPercent/100;
-                if (inflictedTo.getCurrentSpeed() > newSpeed){
+                int newSpeed = maxSpeed + maxSpeed*slowPercent/100;
+                if (inflictedTo.getCurrentSpeed() < newSpeed){
                     inflictedTo.setCurrentSpeed(newSpeed);
                 }
                 break;

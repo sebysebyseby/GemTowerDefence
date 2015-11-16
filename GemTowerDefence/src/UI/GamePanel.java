@@ -187,9 +187,11 @@ public class GamePanel extends JPanel implements MouseListener {
         for (Line line : game.getLines()) {
             line.draw(g);
         }
-        for (Line line: game.getLines()){ //todo FIX CONCURRENT MODIFICATION
+        Iterator<Line> li = game.getLines().iterator();
+        while (li.hasNext()){
+            Line line = li.next();
             if (line.getAlpha() <= 0){
-                game.getLines().remove(line);
+                li.remove();
             }
         }
     }
