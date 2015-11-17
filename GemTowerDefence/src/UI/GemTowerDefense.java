@@ -1,6 +1,8 @@
 package UI;
 
+import Model.Constants;
 import Model.Game;
+import Model.Gem;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -41,6 +43,8 @@ public class GemTowerDefense extends JFrame {
 
         startRenderTimer();
         startGameTicker();
+
+
     }
 
 
@@ -62,6 +66,10 @@ public class GemTowerDefense extends JFrame {
             }
         });
         gameTimer.start();
+        for (Gem g: Constants.allPossibleGems){
+            g.retrieveUpgradeDetails();
+        }
+
     }
 
     public void startRenderTimer(){

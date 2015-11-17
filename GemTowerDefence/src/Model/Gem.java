@@ -11,8 +11,8 @@ public class Gem extends Tower{
 
     private String grade;
     private Game game;
-    private List<Gem> gemsToCombineWith;
-    private String upgradeSpecialTowerName;
+    private List<Gem> otherGemsToCombineWith; // this is a list of the gems (not including this one) needed to combine with
+    private SpecialTower upgradeTower; // The special tower it combines into
 
     // Constructor: create new gem, all inputs need to be given, only kills and level are set initially to 0
 
@@ -20,11 +20,38 @@ public class Gem extends Tower{
                int highDamage, double range, int maxCooldown) {
         super(type, range, maxCooldown, highDamage, xPos, yPos, lowDamage);
         this.grade = grade;
-        retrieveUpgradeDetails();
+        otherGemsToCombineWith = new LinkedList<>();
         game = Game.getInstance();
+        retrieveUpgradeDetails(); // this has to be called later to avoid referencing gems that don't exist yet on load
+
     }
 
+    public Gem(String type, String grade, int xPos, int yPos, int lowDamage,
+               int highDamage, double range, int maxCooldown, boolean hasStartUpCompleted) {
+        super(type, range, maxCooldown, highDamage, xPos, yPos, lowDamage);
+        this.grade = grade;
+        otherGemsToCombineWith = new LinkedList<>();
+        game = Game.getInstance();
+        if (hasStartUpCompleted) retrieveUpgradeDetails(); // this has to be called later to avoid referencing gems that don't exist yet on load
+
+    }
+
+    // Call a static method to return a list with the tower this gem combine special 's into,
+    // and the gems needed to combine into that tower, in that order
+    // ASSUMES that the list produced by the static method is correctly structured
+    // if a null completeInfo list is given, it implies that this gem has no upgrade path
     public void retrieveUpgradeDetails(){
+        List<Tower> completeInfo = Constants.getUpgradeGems(grade + type);
+        if (completeInfo != null) {
+            upgradeTower = (SpecialTower) completeInfo.get(0);
+            for (int i = 1; i < completeInfo.size(); i++) {
+                Gem g = (Gem) completeInfo.get(i);
+                if (!g.getGrade().equals(grade) || !g.getType().equals(type)) {
+                    otherGemsToCombineWith.add(g);
+                }
+            }
+        }
+
         //todo: make method to instantiate the gems it can comebine with and the upgrade specialTower's name.
     }
 
@@ -46,7 +73,7 @@ public class Gem extends Tower{
                 break;
             case "Sapphire":
                 type = "Sapphire";
-                slowShot(25, 5);
+                slowShot(100, 40);
                 break;
             case "Topaz":
                 multiShot(3);
@@ -56,10 +83,10 @@ public class Gem extends Tower{
                 criticalShot(33, 5);
                 break;
             case "Aquamarine":
-                defaultShot();
+                stunShot(100, 10);
                 break;
             case "Opal":
-                defaultShot();
+                stunShot(100, 10);
                 break;
             case "Amethyst":
                 defaultShot();

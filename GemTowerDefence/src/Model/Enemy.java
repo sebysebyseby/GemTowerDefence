@@ -101,9 +101,10 @@ public class Enemy extends Sprite{
         }
     }
 
-    // move the enemy based on its current speed
+    Status stun = new Status("Stun", 0,0,0,null,null);
+    // move the enemy based on its current speed, if it is not stunned
     public void moveEnemy(){
-        if (pause <= 0) {
+        if (pause <= 0 && !statuses.contains(stun)) {
             if (xPos == (int) checkpointList[destinationCheckpoint].getX() &&
                     yPos == (int) checkpointList[destinationCheckpoint].getY()) {
                 if (checkpointList[destinationCheckpoint + 1] == null) direction = 'R';

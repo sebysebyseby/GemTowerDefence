@@ -107,6 +107,8 @@ public class InformationPanel extends JPanel implements MouseListener {
                     combineButton.setUsability(true);
                 } else combineButton.setUsability(false);
 
+                // combine special
+
                 // todo combineSpecialButton Condition
             }
         } else {

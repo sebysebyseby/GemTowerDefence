@@ -287,6 +287,7 @@ public class Game {
         return sortedEnemiesInRange;
     }
 
+    // The order in which things happen when the game updates every "tick".
     int moves = Constants.movesPerFrame;
     public void updateGame(){
         makeEnemy();
@@ -310,8 +311,8 @@ public class Game {
         } else framesUntilNextEnemySpawn -= 1;
     }
 
-    // updates the target of all towers in the game.
-    // the target seleccted will be the one with the lowest health. In a tie, the enemy that spawned first is targeted
+    // updates the target of all towers in the game
+    // the target selected will be the one with the lowest health. In a tie, the enemy that spawned first is targeted
     public void updateTowerTargets(){
         for (Tower t: towers) {
             List<Enemy> enemiesInRange = getSortedEnemiesInRangeOf(t);
@@ -339,11 +340,13 @@ public class Game {
         }
     }
 
+    // the statuses that an enemy has are processed
     public void tickStatuses(){
         for (Enemy e: enemies){
             e.tickStatuses();
         }
     }
+
 
     public void moveEnemies(){
         //make sure that if an enemy moves off the screen (to the right or bottom of the screen) it "leaked".
@@ -366,6 +369,8 @@ public class Game {
         }
     }
 
+    // every tower has its cooldowns updated: if the wave finished the cooldowns are entirely reset, otherwise they
+    // are just decremented
     public void updateCooldowns() {
         for (Tower next: towers){
             if (isWaveOver) {
@@ -374,7 +379,6 @@ public class Game {
             else next.updateCooldown();
         }
     }
-
 
     public boolean isGameOver(){
         if (lives <= 0) isGameOver = true;
@@ -394,7 +398,7 @@ public class Game {
         return isWaveOver;
     }
 
-
+    // this is how long the pause between enemy spawns
     public int getFramesUntilNextEnemySpawn(int difficulty, int level){
         return 20; //todo
     }
