@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Sebastian on 2015-08-06.
@@ -108,6 +110,10 @@ public class InformationPanel extends JPanel implements MouseListener {
                 } else combineButton.setUsability(false);
 
                 // combine special
+                if (game.getSelected().getClassNumber() == 1){
+                    Gem selected = (Gem) game.getSelected();
+                    List<Gem> otherGems = ((Gem) selected).getOtherGemsToCombineWith();
+                }
 
                 // todo combineSpecialButton Condition
             }

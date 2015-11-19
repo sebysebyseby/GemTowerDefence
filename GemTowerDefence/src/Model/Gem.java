@@ -1,5 +1,7 @@
 package Model;
 
+import com.sun.xml.internal.ws.api.model.CheckedException;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +36,10 @@ public class Gem extends Tower{
         game = Game.getInstance();
         if (hasStartUpCompleted) retrieveUpgradeDetails(); // this has to be called later to avoid referencing gems that don't exist yet on load
 
+    }
+
+    public List<Gem> getOtherGemsToCombineWith() {
+        return otherGemsToCombineWith;
     }
 
     // Call a static method to return a list with the tower this gem combine special 's into,
